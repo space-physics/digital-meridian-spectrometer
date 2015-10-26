@@ -12,11 +12,11 @@ with Dataset(expanduser('~/data/PKR_SMSP_STD_20130414.NC'),'r') as f:
     Ipeak=f.variables['PeakIntensity'][:]
     Ibase=f.variables['BaseIntensity'][:]
     wavelen=f.variables['Wavelength'][:]
-    angle=arange(181.) #TODO is this right?
+    elv=arange(181.) #TODO is this right?
 #%% plots
 fg,ax = subplots(6,1,figsize=(15,5))
 for i,(a,l) in enumerate(zip(ax,wavelen)):
-    a.pcolormesh(secdayutc,angle,Ipeak[:,i,:].T)
+    a.pcolormesh(secdayutc,elv,Ipeak[:,i,:].T)
     a.set_title('{:.1f} nm'.format(l))
     a.set_ylabel('elevation [deg.]')
     a.autoscale(True,'x',tight=True)
