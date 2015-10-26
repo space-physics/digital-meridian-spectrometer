@@ -58,6 +58,7 @@ if __name__ == '__main__':
 
     Intensity = readmsp(p.ncfn,p.date)
     plotmspspectra(Intensity,None)
-    plotmspspectra(Intensity,p.tlim) #zoom
+    if p.tlim:
+        plotmspspectra(Intensity,p.tlim) #zoom
 
     show()
