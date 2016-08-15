@@ -8,11 +8,11 @@ except Exception:
     pass
 
 
-setup(name='spectroreader',
-	  description='Spectrometer Reader netCDF4',
+setup(name='msp_aurora',
+	  description='MSP Aurora Spectrometer Reader netCDF4 / netCDF3',
 	  author='Michael Hirsch',
 	  url='https://github.com/scienceopen/meridian-spectrometer-reader',
    install_requires=['pathlib2'],
-      packages=['spectroreader'],
+      packages=['msp_aurora'],
 	  )
 
