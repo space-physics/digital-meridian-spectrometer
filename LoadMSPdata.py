@@ -3,7 +3,8 @@ from __future__ import division
 from msp_aurora import Path
 from matplotlib.pyplot import show
 #
-from msp_aurora.readMSP import readmsp,plotmspspectra
+from msp_aurora.readMSP import readmsp
+from msp_aurora.plots import plotmspspectra
 
 """
 Note: elevation from North Horizon, so magnetic zenith ~ 180-77.5 =
