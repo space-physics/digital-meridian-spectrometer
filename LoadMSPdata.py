@@ -29,6 +29,6 @@ if __name__ == '__main__':
     fn = Path(p.ncfn).expanduser()
 
     Intensity = readmsp(fn, p.tlim, p.elim)
-    plotmspspectra(Intensity,None)
+    plotmspspectra(Intensity)
 
     show()
