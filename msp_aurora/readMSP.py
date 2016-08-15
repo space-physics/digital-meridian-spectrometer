@@ -8,9 +8,11 @@ from dateutil.parser import parse
 from pytz import UTC
 from matplotlib.pyplot import subplots
 from matplotlib.colors import LogNorm
+from matplotlib.dates import DateFormatter
 from matplotlib.ticker import LogFormatterMathtext#,ScalarFormatter
 import seaborn as sns
 sns.set_context('talk')
+sns.set_style('ticks')
 #
 from histutils.fortrandates import yd2datetime
 
@@ -51,8 +53,12 @@ def readmsp(fn, tlim,elim):
 #%% load the data
 #        Analog=f['AnalogData'][tind,:]
 #        Ibase=f['BaseIntensity'][tind,goodwl,elind]
-        Ipeak = f['PeakIntensity'][tind,goodwl,elind]  # time x wavelength x elevation angle
-    Ipeak = Ipeak * filtfact[None,:,None] / 128.
+
+        # astype(float) is critical to avoid overflow!
+        Ipeak = f['PeakIntensity'][tind,goodwl,elind].astype(float)  # time x wavelength x elevation angle
+    Ipeak = Ipeak * filtfact[None,:,None].astype(float) / 128.
+
+    assert (Ipeak>=0).all(),'did you forget to cast to float before math ops?'
 
 
     I = DataArray(data = Ipeak,
@@ -61,7 +67,7 @@ def readmsp(fn, tlim,elim):
 
     return I
 
-def plotmspspectra(Intensity,tlim):
+def plotmspspectra(Intensity):
     sfmt = LogFormatterMathtext()
 #    sfmt = ScalarFormatter()
 #    sfmt.set_powerlimits((-2,2)) #force scientific notation for numbers with 10^a where A<a<B
@@ -81,10 +87,13 @@ def plotmspspectra(Intensity,tlim):
                        cmap='cubehelix',norm=LogNorm())
         fg.colorbar(h,ax=a,format=sfmt).set_label('Rayleighs')
         a.set_title('{:.1f} nm'.format(l))
-        a.set_ylabel('elevation [deg.]')
+        a.set_ylabel('elev. from North [deg.]')
         a.autoscale(True,tight=True)
-        if tlim:
-            xlim = [parse(l) for l in tlim]
-            a.set_xlim(xlim)
 
+
+
+    a.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+    fg.autofmt_xdate()
     a.set_xlabel('UTC')
+
+    #fg.tight_layout(pad=1.7)
