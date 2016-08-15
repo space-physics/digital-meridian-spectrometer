@@ -8,6 +8,9 @@ Data sources
 * 2011-present ftp://optics.gi.alaska.edu/PKR/DMSP/NCDF/
 * 1983-2010 (NetCDF 3 .PF files)  http://optics.gi.alaska.edu/realtime/data/msp/pkr
 
+.. image:: tests/demo.png
+    :alt: example of MSP data
+
 install
 =======
 ::
