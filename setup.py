@@ -1,17 +1,18 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/env python
+import subprocess
 from setuptools import setup
 
-with open('README.rst','r') as f:
-	long_description = f.read()
+try:
+    subprocess.call(['conda','install','--file','requirements.txt'])
+except Exception:
+    pass
+
 
 setup(name='spectroreader',
-      version='0.1',
 	  description='Spectrometer Reader netCDF4',
-	  long_description=long_description,
 	  author='Michael Hirsch',
 	  url='https://github.com/scienceopen/meridian-spectrometer-reader',
-   install_requires=['netCDF4','pytz','six','nose'],
+   install_requires=['pathlib2'],
       packages=['spectroreader'],
 	  )
 
