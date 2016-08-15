@@ -6,7 +6,7 @@ from numpy import arange,array
 from datetime import datetime,timedelta
 from dateutil.parser import parse
 #
-from histutils.fortrandates import yd2datetime
+from histutils.fortrandates import yd2datetime,forceutc
 
 def readmsp(fn, tlim,elim):
     """
@@ -15,7 +15,7 @@ def readmsp(fn, tlim,elim):
 #%% date from filename -- only way
     ext = fn.suffix.lower()
     if ext == '.nc':
-        d0 = datetime.strptime(fn.stem[13:21],'%Y%m%d')
+        d0 = forceutc(datetime.strptime(fn.stem[13:21],'%Y%m%d'))
     elif ext == '.pf':
         d0 = yd2datetime(fn.stem[4:])
 
@@ -48,13 +48,12 @@ def readmsp(fn, tlim,elim):
 
         # astype(float) is critical to avoid overflow!
         Ipeak = f['PeakIntensity'][tind,goodwl,elind].astype(float)  # time x wavelength x elevation angle
-    Ipeak = Ipeak * filtfact[None,:,None].astype(float) / 128.
-
-    assert (Ipeak>=0).all(),'did you forget to cast to float before math ops?'
+    Rayleigh = Ipeak * filtfact[None,:,None].astype(float) / 128.
 
 
-    I = DataArray(data = Ipeak,
+
+    R = DataArray(data = Rayleigh,
                   dims = ['time','wavelength','elevation'],
                   coords = {'time':t[tind], 'wavelength':wavelen[goodwl], 'elevation':elv[elind]})
 
-    return I
+    return R

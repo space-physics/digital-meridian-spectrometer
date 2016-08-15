@@ -13,6 +13,9 @@ setup(name='msp_aurora',
 	  author='Michael Hirsch',
 	  url='https://github.com/scienceopen/meridian-spectrometer-reader',
    install_requires=['pathlib2'],
+      dependency_links = [
+        'https://github.com/scienceopen/histutils/tarball/master#egg=histutils',
+        'https://github.com/scienceopen/isrutils/tarball/master#egg=isrutils',],
       packages=['msp_aurora'],
 	  )
 

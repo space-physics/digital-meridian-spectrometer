@@ -8,6 +8,8 @@ from matplotlib.ticker import LogFormatterMathtext#,ScalarFormatter
 import seaborn as sns
 sns.set_context('talk')
 sns.set_style('ticks')
+#
+from isrutils.plots import timeticks
 
 def plotmspspectra(Intensity):
     sfmt = LogFormatterMathtext()
@@ -22,21 +24,27 @@ def plotmspspectra(Intensity):
     Ipeak = Intensity.values
     #%% plots
     fg,ax = subplots(wavelen.size,1,figsize=(20,12),sharex=True)
-    fg.suptitle(datetime.fromtimestamp(t[0].item()/1e9, tz=UTC).strftime('%Y-%m-%d') +
-                '  Meridian Scanning Photometer: Peak Intensity')
     for i,(a,l) in enumerate(zip(ax,wavelen)):
         h=a.pcolormesh(t,elv,Ipeak[:,i,:].T,
                        cmap='cubehelix',norm=LogNorm())
         fg.colorbar(h,ax=a,format=sfmt).set_label('Rayleighs')
         a.set_title('{:.1f} nm'.format(l))
-        a.set_ylabel('elev. from North [deg.]')
+
         a.invert_yaxis()
         a.autoscale(True,tight=True)
 
 
+    a.set_ylabel('elev. North [deg.]')
 
+    majtick,mintick = timeticks(t[-1] -t[0])
+    a.xaxis.set_major_locator(majtick)
+    a.xaxis.set_minor_locator(mintick)
     a.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
     fg.autofmt_xdate()
     a.set_xlabel('UTC')
 
-    #fg.tight_layout(pad=1.7)
+
+    fg.suptitle(datetime.fromtimestamp(t[0].item()/1e9, tz=UTC).strftime('%Y-%m-%d') +
+                '  Meridian Scanning Photometer: Peak Intensity',
+                y=0.99)
+    fg.tight_layout(pad=1.7)
