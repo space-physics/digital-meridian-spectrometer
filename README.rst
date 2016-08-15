@@ -3,7 +3,7 @@ meridian-spectrometer-reader
 ============================
 for Poker Flat Digital Meridian Spectrometer, which uses netCDF
 
-`Data source <ftp://optics.gi.alaska.edu/PKR/DMSP/NCDF/>`_
+Data source ftp://optics.gi.alaska.edu/PKR/DMSP/NCDF/
 
 install
 =======
