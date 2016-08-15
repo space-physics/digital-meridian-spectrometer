@@ -30,6 +30,7 @@ def plotmspspectra(Intensity):
         fg.colorbar(h,ax=a,format=sfmt).set_label('Rayleighs')
         a.set_title('{:.1f} nm'.format(l))
         a.set_ylabel('elev. from North [deg.]')
+        a.invert_yaxis()
         a.autoscale(True,tight=True)
 
 
