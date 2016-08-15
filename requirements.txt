@@ -1,5 +1,8 @@
+setuptools
+nose
+six
 netCDF4
-pandas
+xarray
 numpy
 matplotlib
 dateutil
