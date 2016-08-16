@@ -39,15 +39,21 @@ def readmsp(fn, tlim,elim):
             elind = slice(None)
 #%% wavelength channels
         wavelen = f['Wavelength'][:] # vector of measured wavelengths [nm]
-        goodwl = wavelen > 0 #some channels are unused in some files
-#%% filter factor per wavelength Rayleigh/PMT * 128
-        filtfact = f['FilterFactor'][goodwl]
+        goodwl = wavelen > 1. #some channels are unused in some files
 #%% load the data
 #        Analog=f['AnalogData'][tind,:]
 #        Ibase=f['BaseIntensity'][tind,goodwl,elind]
-
+        Ipeak = f['PeakIntensity'][tind,goodwl,elind] # time x wavelength x elevation angle
+#%% root out bad channels 2011-03-01 for example
+        for i in range(wavelen[goodwl].size):
+            if (Ipeak[:,i,:]==0).all():
+                goodwl[i] = False
         # astype(float) is critical to avoid overflow!
-        Ipeak = f['PeakIntensity'][tind,goodwl,elind].astype(float)  # time x wavelength x elevation angle
+        Ipeak = f['PeakIntensity'][tind,goodwl,elind].astype(float)
+#%% filter factor per wavelength Rayleigh/PMT * 128
+        filtfact = f['FilterFactor'][goodwl]
+
+
     Rayleigh = Ipeak * filtfact[None,:,None].astype(float) / 128.
 
 

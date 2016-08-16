@@ -36,9 +36,11 @@ def plotmspspectra(Intensity):
 
     a.set_ylabel('elev. North [deg.]')
 
-    majtick,mintick = timeticks(t[-1] -t[0])
-    a.xaxis.set_major_locator(majtick)
-    a.xaxis.set_minor_locator(mintick)
+    majtick,mintick = timeticks(t[-1] - t[0])
+    if majtick:
+        a.xaxis.set_major_locator(majtick)
+    if mintick:
+        a.xaxis.set_minor_locator(mintick)
     a.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
     fg.autofmt_xdate()
     a.set_xlabel('UTC')
