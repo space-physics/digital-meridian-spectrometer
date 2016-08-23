@@ -5,5 +5,5 @@ netCDF4
 xarray
 numpy
 matplotlib
-dateutil
+python-dateutil
 pytz
