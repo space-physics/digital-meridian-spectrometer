@@ -1,13 +1,9 @@
 from datetime import datetime
 from pytz import UTC
-from matplotlib.pyplot import subplots
+from matplotlib.pyplot import subplots,figure
 from matplotlib.colors import LogNorm
 from matplotlib.dates import DateFormatter
 from matplotlib.ticker import LogFormatterMathtext#,ScalarFormatter
-
-import seaborn as sns
-sns.set_context('talk')
-sns.set_style('ticks')
 #
 from isrutils.plots import timeticks
 
@@ -19,34 +15,53 @@ def plotmspspectra(Intensity):
 #    sfmt.set_useOffset(False)
 
     wavelen = Intensity.wavelength.values
-    elv = Intensity.elevation
-    t=Intensity.time  #str(datetime.fromtimestamp(t.item()/1e9, tz=UTC))[:-6]
     Ipeak = Intensity.values
+    t = Intensity.time
     #%% plots
     fg,ax = subplots(wavelen.size,1,figsize=(20,12),sharex=True)
     for i,(a,l) in enumerate(zip(ax,wavelen)):
-        h=a.pcolormesh(t,elv,Ipeak[:,i,:].T,
-                       cmap='cubehelix',norm=LogNorm())
-        fg.colorbar(h,ax=a,format=sfmt).set_label('Rayleighs')
-        a.set_title('{:.1f} nm'.format(l))
+        h=a.pcolormesh(t, Intensity.elevation,
+                       Ipeak[:,i,:].T,
+                       cmap='cubehelix_r',norm=LogNorm())
+
+        fg.colorbar(h,ax=a,format=sfmt)
+
+        a.set_title('{:.1f} nm'.format(l/10))
 
         a.invert_yaxis()
         a.autoscale(True,tight=True)
 
 
-    a.set_ylabel('elev. North [deg.]')
+    fg.text(0.88, 0.5, 'Rayleighs', ha='center', va='center', rotation='vertical')
+    fg.text(0.01, 0.5, 'elevation from North [deg.]', ha='center', va='center', rotation='vertical')
 
-    majtick,mintick = timeticks(t[-1] - t[0])
-    if majtick:
-        a.xaxis.set_major_locator(majtick)
-    if mintick:
-        a.xaxis.set_minor_locator(mintick)
-    a.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-    fg.autofmt_xdate()
-    a.set_xlabel('UTC')
+    tickfix(t,fg,a)
 
 
     fg.suptitle(datetime.fromtimestamp(t[0].item()/1e9, tz=UTC).strftime('%Y-%m-%d') +
                 '  Meridian Scanning Photometer: Peak Intensity',
                 y=0.99)
-    fg.tight_layout(pad=1.7)
+    fg.tight_layout(pad=1.5)
+
+def plotratio(ratio,wl):
+    fg = figure()
+    ax = fg.gca()
+    hi = ax.pcolormesh(ratio.time,ratio.elevation,
+                       ratio.T,
+                       cmap='cubehelix_r')
+
+    fg.colorbar(hi,ax=ax).set_label('{} / {}'.format(wl[0],wl[1]))
+
+    ax.set_ylabel('elevation from North [deg.]')
+
+    tickfix(ratio.time,fg,ax)
+
+def tickfix(t,fg,ax):
+    majtick,mintick = timeticks(t[-1] - t[0])
+    if majtick:
+        ax.xaxis.set_major_locator(majtick)
+    if mintick:
+        ax.xaxis.set_minor_locator(mintick)
+    ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+    fg.autofmt_xdate()
+    ax.set_xlabel('UTC')

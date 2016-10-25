@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-from __future__ import division
-from msp_aurora import Path
 from matplotlib.pyplot import show
 #
-from msp_aurora.readMSP import readmsp
-from msp_aurora.plots import plotmspspectra
+from msp_aurora import readmsp,lineratio
+from msp_aurora.plots import plotmspspectra,plotratio
+import seaborn as sns
+sns.set_context('talk')
+sns.set_style('ticks')
 
 """
-Note: elevation from North Horizon, so magnetic zenith ~ 180-77.5 =
+Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat we use elevation angles
+    FROM NORTH of 95-110 degrees corresponding to symmetric about 77.5 elevation angle
 
 2007-03-23
 ./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T10:30 2007-03-23T12:00Z  -e 95 110
@@ -25,11 +27,13 @@ if __name__ == '__main__':
     p.add_argument('ncfn',help='netCDF data file name to read')
     p.add_argument('-t','--tlim',help='time window to zoom plot in on',nargs=2)
     p.add_argument('-e','--elim',help='elevation limits to plot FROM NORTH HORIZON',nargs=2,type=float)
+    p.add_argument('--wl',help='wavelengths to ratio [A]',nargs=2,default=[6300,4278])
     p = p.parse_args()
 
-    fn = Path(p.ncfn).expanduser()
-
-    Intensity = readmsp(fn, p.tlim, p.elim)
+    Intensity = readmsp(p.ncfn, p.tlim, p.elim)
     plotmspspectra(Intensity)
+#%%
+    ratio = lineratio(Intensity,p.wl)
+    plotratio(ratio,p.wl)
 
     show()
