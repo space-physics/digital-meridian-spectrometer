@@ -34,6 +34,6 @@ if __name__ == '__main__':
     plotmspspectra(Intensity)
 #%%
     ratio = lineratio(Intensity,p.wl)
-    plotratio(ratio,p.wl)
+    plotratio(ratio,p.wl, Intensity.sel(wavelength=p.wl))
 
     show()
