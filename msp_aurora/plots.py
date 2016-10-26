@@ -5,6 +5,7 @@ from matplotlib.pyplot import subplots,figure
 from matplotlib.colors import LogNorm
 from matplotlib.dates import DateFormatter
 from matplotlib.ticker import LogFormatterMathtext#,ScalarFormatter
+from matplotlib.dates import SecondLocator
 import matplotlib.colors as colors
 #
 from isrutils.plots import timeticks
@@ -15,12 +16,12 @@ sfmt = LogFormatterMathtext()
 #    sfmt.set_scientific(True)
 #    sfmt.set_useOffset(False)
 
-def plotmspspectra(I):
+def plotmspspectra(I,elfid):
     wl = I.wavelength.values
     #%% plots
     fg,ax = subplots(wl.size,1,figsize=(20,12),sharex=True)
 
-    spectrasubplot(wl,I,fg,ax)
+    spectrasubplot(wl,I,fg,ax,elfid)
     tickfix(I.time, fg, fg.gca())
 
     fg.text(0.88, 0.5, 'Rayleighs', ha='center', va='center', rotation='vertical')
@@ -31,7 +32,7 @@ def plotmspspectra(I):
                 y=0.99)
     fg.tight_layout(pad=1.5)
 
-def spectrasubplot(wl,I,fg,ax,indlbl=False,clim=(None,None)):
+def spectrasubplot(wl,I,fg,ax,elfid,indlbl=False,clim=(None,None)):
     for i,(a,l) in enumerate(zip(ax,wl)):
         h=a.pcolormesh(I.time, I.elevation,
                        I[:,i,:].T,
@@ -42,20 +43,29 @@ def spectrasubplot(wl,I,fg,ax,indlbl=False,clim=(None,None)):
         if indlbl:
             hc.set_label('Rayleighs')
 
+        for f in elfid:
+            a.axhline(f,color='gold',alpha=0.8,linestyle='--')
+
         a.set_title('{:.1f} nm'.format(l/10))
 
         a.invert_yaxis()
         a.autoscale(True,tight=True)
 
-def plotratio(ratio,wl,I):
+def plotratio(ratio,wl,I, elfid):
     fg,ax = subplots(3,1,figsize=(20,12),sharex=True)
 
-    spectrasubplot(wl,I,fg,ax[:2],True,(1e3,1e4))
+    spectrasubplot(wl,I,fg,ax[:2],elfid,True,(1e3,1e4))
 
     hi = ax[2].pcolormesh(ratio.time,ratio.elevation,
                           ratio.T,
                           cmap='bwr',
-                          norm=MidpointNormalize(midpoint=1.))
+                          norm=MidpointNormalize(midpoint=1.),
+                          vmin=0.5,vmax=3.5)
+
+    for f in elfid:
+        ax[2].axhline(f,color='gold',alpha=0.85,linestyle='--')
+
+    ax[2].invert_yaxis()
     ax[2].autoscale(True,tight=True)
 
     fg.colorbar(hi,ax=ax[2]).set_label('{} / {}'.format(wl[0],wl[1]))
