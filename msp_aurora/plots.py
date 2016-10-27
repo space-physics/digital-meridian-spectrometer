@@ -1,52 +1,105 @@
 from datetime import datetime
 from pytz import UTC
-from matplotlib.pyplot import subplots
+import numpy as np
+from matplotlib.pyplot import subplots,figure
 from matplotlib.colors import LogNorm
 from matplotlib.dates import DateFormatter
 from matplotlib.ticker import LogFormatterMathtext#,ScalarFormatter
-
-import seaborn as sns
-sns.set_context('talk')
-sns.set_style('ticks')
+from matplotlib.dates import SecondLocator
+import matplotlib.colors as colors
 #
 from isrutils.plots import timeticks
 
-def plotmspspectra(Intensity):
-    sfmt = LogFormatterMathtext()
+sfmt = LogFormatterMathtext()
 #    sfmt = ScalarFormatter()
 #    sfmt.set_powerlimits((-2,2)) #force scientific notation for numbers with 10^a where A<a<B
 #    sfmt.set_scientific(True)
 #    sfmt.set_useOffset(False)
 
-    wavelen = Intensity.wavelength.values
-    elv = Intensity.elevation
-    t=Intensity.time  #str(datetime.fromtimestamp(t.item()/1e9, tz=UTC))[:-6]
-    Ipeak = Intensity.values
+def plotmspspectra(I,elfid):
+    wl = I.wavelength.values
     #%% plots
-    fg,ax = subplots(wavelen.size,1,figsize=(20,12),sharex=True)
-    for i,(a,l) in enumerate(zip(ax,wavelen)):
-        h=a.pcolormesh(t,elv,Ipeak[:,i,:].T,
-                       cmap='cubehelix',norm=LogNorm())
-        fg.colorbar(h,ax=a,format=sfmt).set_label('Rayleighs')
-        a.set_title('{:.1f} nm'.format(l))
+    fg,ax = subplots(wl.size,1,figsize=(20,12),sharex=True)
+
+    spectrasubplot(wl,I,fg,ax,elfid)
+    tickfix(I.time, fg, fg.gca())
+
+    fg.text(0.88, 0.5, 'Rayleighs', ha='center', va='center', rotation='vertical')
+    fg.text(0.01, 0.5, 'elevation from North [deg.]', ha='center', va='center', rotation='vertical')
+
+    fg.suptitle(datetime.fromtimestamp(I.time[0].item()/1e9, tz=UTC).strftime('%Y-%m-%d') +
+                '  Meridian Scanning Photometer: Peak Intensity',
+                y=0.99)
+    fg.tight_layout(pad=1.5)
+
+def spectrasubplot(wl,I,fg,ax,elfid,indlbl=False,clim=(None,None)):
+    for i,(a,l) in enumerate(zip(ax,wl)):
+        h=a.pcolormesh(I.time, I.elevation,
+                       I[:,i,:].T,
+                       cmap='cubehelix_r',norm=LogNorm(),
+                       vmin=clim[0],vmax=clim[1])
+
+        hc = fg.colorbar(h,ax=a,format=sfmt)
+        if indlbl:
+            hc.set_label('Rayleighs')
+
+        for f in elfid:
+            a.axhline(f,color='gold',alpha=0.8,linestyle='--')
+
+        a.set_title('{:.1f} nm'.format(l/10))
 
         a.invert_yaxis()
         a.autoscale(True,tight=True)
 
+def plotratio(ratio,wl,I, elfid):
+    fg,ax = subplots(3,1,figsize=(20,12),sharex=True)
 
-    a.set_ylabel('elev. North [deg.]')
+    spectrasubplot(wl,I,fg,ax[:2],elfid,True,(1e3,1e4))
 
+    hi = ax[2].pcolormesh(ratio.time,ratio.elevation,
+                          ratio.T,
+                          cmap='bwr',
+                          norm=MidpointNormalize(midpoint=1.),
+                          vmin=0.5,vmax=3.5)
+
+    for f in elfid:
+        ax[2].axhline(f,color='gold',alpha=0.85,linestyle='--')
+
+    ax[2].invert_yaxis()
+    ax[2].autoscale(True,tight=True)
+
+    fg.colorbar(hi,ax=ax[2]).set_label('{} / {}'.format(wl[0],wl[1]))
+
+    fg.text(0.085, 0.5, 'elevation from North [deg.]', ha='center', va='center', rotation='vertical')
+
+    fg.suptitle(datetime.fromtimestamp(I.time[0].item()/1e9, tz=UTC).strftime('%Y-%m-%d') +
+                '  Meridian Scanning Photometer: {} / {} Intensity Ratio'.format(wl[0],wl[1]))
+               # y=0.99)
+
+    tickfix(ratio.time,fg,ax[2])
+
+
+def tickfix(t,fg,ax):
     majtick,mintick = timeticks(t[-1] - t[0])
     if majtick:
-        a.xaxis.set_major_locator(majtick)
+        ax.xaxis.set_major_locator(majtick)
     if mintick:
-        a.xaxis.set_minor_locator(mintick)
-    a.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+        ax.xaxis.set_minor_locator(mintick)
+    ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
     fg.autofmt_xdate()
-    a.set_xlabel('UTC')
+    ax.set_xlabel('UTC')
 
+class MidpointNormalize(colors.Normalize):
+    """
+    http://matplotlib.org/users/colormapnorms.html
+    may appear in a future version of Matplotlib
+    """
+    def __init__(self, vmin=None, vmax=None, midpoint=None, clip=False):
+        self.midpoint = midpoint
+        colors.Normalize.__init__(self, vmin, vmax, clip)
 
-    fg.suptitle(datetime.fromtimestamp(t[0].item()/1e9, tz=UTC).strftime('%Y-%m-%d') +
-                '  Meridian Scanning Photometer: Peak Intensity',
-                y=0.99)
-    fg.tight_layout(pad=1.7)
+    def __call__(self, value, clip=None):
+        # I'm ignoring masked values and all kinds of edge cases to make a
+        # simple example...
+        x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 1]
+        return np.ma.masked_array(np.interp(value, x, y))

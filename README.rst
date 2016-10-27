@@ -3,10 +3,10 @@ meridian-spectrometer-reader
 ============================
 for Poker Flat Digital Meridian Spectrometer, which uses netCDF
 
-.. contents::
-
 .. image:: tests/demo.png
-    :alt: example of MSP data
+    :alt: example of PF-DMSP data
+
+.. contents::
 
 
 
