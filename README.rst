@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/scienceopen/meridian-spectrometer-reader.svg?branch=master
+    :target: https://travis-ci.org/scienceopen/meridian-spectrometer-reader
+
 ============================
 meridian-spectrometer-reader
 ============================
