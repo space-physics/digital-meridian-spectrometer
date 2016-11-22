@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from matplotlib.pyplot import show
 #
 from msp_aurora import readmsp,lineratio
