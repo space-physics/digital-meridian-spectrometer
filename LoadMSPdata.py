@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from matplotlib.pyplot import show
 #
 from msp_aurora import readmsp,lineratio
@@ -29,12 +29,13 @@ if __name__ == '__main__':
     p.add_argument('-e','--elim',help='elevation limits to plot FROM NORTH HORIZON',nargs=2,type=float)
     p.add_argument('--wl',help='wavelengths to ratio [A]',nargs=2,default=[6300,4278])
     p.add_argument('--elfid',help='elevation angles at which to place fiducials (for other camera)',type=float,nargs=2,default=[])
+    p.add_argument('-v','--verbose',action='store_true')
     p = p.parse_args()
 
     Intensity = readmsp(p.ncfn, p.tlim, p.elim)
     plotmspspectra(Intensity, p.elfid)
 #%%
     ratio = lineratio(Intensity,p.wl)
-    plotratio(ratio,p.wl, Intensity.sel(wavelength=p.wl), p.elfid)
+    plotratio(ratio,p.wl, Intensity.sel(wavelength=p.wl), p.elfid, p.verbose)
 
     show()
