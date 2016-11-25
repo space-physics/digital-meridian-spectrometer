@@ -1,11 +1,10 @@
 from datetime import datetime
 from pytz import UTC
 import numpy as np
-from matplotlib.pyplot import subplots,figure
+from matplotlib.pyplot import subplots
 from matplotlib.colors import LogNorm
 from matplotlib.dates import DateFormatter
 from matplotlib.ticker import LogFormatterMathtext#,ScalarFormatter
-from matplotlib.dates import SecondLocator
 import matplotlib.colors as colors
 #
 from isrutils.plots import timeticks
@@ -16,12 +15,14 @@ sfmt = LogFormatterMathtext()
 #    sfmt.set_scientific(True)
 #    sfmt.set_useOffset(False)
 
+vlims = {4278:[500,15000], 4861:[50,1000], 5577:[4e3,2e4]}
+
 def plotmspspectra(I,elfid):
     wl = I.wavelength.values
     #%% plots
     fg,ax = subplots(wl.size,1,figsize=(20,12),sharex=True)
 
-    spectrasubplot(wl,I,fg,ax,elfid)
+    spectrasubplot(wl,I,fg,ax,elfid,vlims)
     tickfix(I.time, fg, fg.gca())
 
     fg.text(0.88, 0.5, 'Rayleighs', ha='center', va='center', rotation='vertical')
@@ -32,12 +33,20 @@ def plotmspspectra(I,elfid):
                 y=0.99)
     fg.tight_layout(pad=1.5)
 
-def spectrasubplot(wl,I,fg,ax,elfid,indlbl=False,clim=(None,None)):
+def spectrasubplot(wl,I,fg,ax,elfid,indlbl=False,clim=None):
     for i,(a,l) in enumerate(zip(ax,wl)):
+        if clim is None:
+            if l in vlims:
+                c = vlims[l]
+            else:
+                c = (None,None)
+        else:
+            c=clim
+
         h=a.pcolormesh(I.time, I.elevation,
                        I[:,i,:].values.T,
                        cmap='cubehelix_r',norm=LogNorm(),
-                       vmin=clim[0],vmax=clim[1])
+                       vmin=c[0],vmax=c[1])
 
         hc = fg.colorbar(h,ax=a,format=sfmt)
         if indlbl:
@@ -51,17 +60,20 @@ def spectrasubplot(wl,I,fg,ax,elfid,indlbl=False,clim=(None,None)):
         a.invert_yaxis()
         a.autoscale(True,tight=True)
 
-def plotratio(ratio,wl,I, elfid, verbose):
+def plotratio(ratio,wl,I, elfid, ratlim,verbose):
+    if ratio is None:
+        return
+
     ratio = ratio.T
     fg,ax = subplots(3,1,figsize=(20,12),sharex=True)
 
-    spectrasubplot(wl,I,fg,ax[:2],elfid,True,(1e3,1e4))
+    spectrasubplot(wl,I,fg,ax[:2],elfid,True)
 
     hi = ax[2].pcolormesh(ratio.time,ratio.elevation,
                           ratio.values,
                           cmap='bwr',
-                          norm=MidpointNormalize(midpoint=1.),
-                          vmin=0.5,vmax=3.5)
+                          norm=MidpointNormalize(midpoint=ratlim[1]),
+                          vmin=ratlim[0], vmax=ratlim[2])
 
     for f in elfid:
         ax[2].axhline(f,color='gold',alpha=0.85,linestyle='--')

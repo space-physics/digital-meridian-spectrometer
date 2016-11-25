@@ -33,3 +33,14 @@ Notes
 You can also graphically browse the files with the ``ncview`` program::
 
     apt-get install ncview
+
+Error: libnetcdf.so.7
+=====================
+if you get::
+
+    ImportError: libnetcdf.so.7: cannot open shared object file: No such file or directory
+
+try::
+
+    sudo apt install libnetcdf-dev
+    pip install --upgrade netcdf4

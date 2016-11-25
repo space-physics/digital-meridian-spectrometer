@@ -4,6 +4,7 @@ try:
 except (AttributeError,ImportError):
     from pathlib2 import Path
 #%%
+import logging
 from six import string_types
 from netCDF4 import Dataset
 from xarray import DataArray
@@ -76,4 +77,8 @@ def lineratio(R,wl):
     R: brightness in Rayleighs vs. time, wavelength, elevation
     wl: wavelengths to ratio
     """
-    return R.sel(wavelength=wl[0]) / R.sel(wavelength=wl[1])
+    try:
+        return R.sel(wavelength=wl[0]) / R.sel(wavelength=wl[1])
+    except KeyError as e:
+        logging.error('wavelength {} not available. skipping ratio'.format(e))
+        return
