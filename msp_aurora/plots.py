@@ -15,36 +15,43 @@ sfmt = LogFormatterMathtext()
 #    sfmt.set_scientific(True)
 #    sfmt.set_useOffset(False)
 
-vlims = {4278:[500,15000], 4861:[50,1000], 5577:[4e3,2e4]}
+vlims = {4278:[500,15000], 4861:[100,1000], 5200:[100,2000], 6700:[100,2000],
+         5577:[4e3,1e5],6300:[1000,20000]}
+
+chem = {4278: r'$N_{2}^{+}$ 1N', 4861: r'H$_\beta$', 5200:'[NI]', 6700:r'N$_2$ 1P',
+         5577:'[OI]32', 6300:'[OI]21'}
 
 def plotmspspectra(I,elfid):
     wl = I.wavelength.values
     #%% plots
     fg,ax = subplots(wl.size,1,figsize=(20,12),sharex=True)
 
-    spectrasubplot(wl,I,fg,ax,elfid,vlims)
+    spectrasubplot(wl,I,fg,ax,elfid,False,vlims)
     tickfix(I.time, fg, fg.gca())
 
-    fg.text(0.88, 0.5, 'Rayleighs', ha='center', va='center', rotation='vertical')
+    fg.text(0.89, 0.5, 'Rayleighs', ha='center', va='center', rotation='vertical')
     fg.text(0.01, 0.5, 'elevation from North [deg.]', ha='center', va='center', rotation='vertical')
 
     fg.suptitle(datetime.fromtimestamp(I.time[0].item()/1e9, tz=UTC).strftime('%Y-%m-%d') +
                 '  Meridian Scanning Photometer: Peak Intensity',
                 y=0.99)
-    fg.tight_layout(pad=1.5)
+    fg.tight_layout(pad=1.1)
 
 def spectrasubplot(wl,I,fg,ax,elfid,indlbl=False,clim=None):
-    for i,(a,l) in enumerate(zip(ax,wl)):
+    assert isinstance(indlbl,bool)
+
+    for a,l in zip(ax,wl):
         if clim is None:
-            if l in vlims:
+            c=(None,None)
+        elif isinstance(clim,dict) and l in vlims:
                 c = vlims[l]
-            else:
-                c = (None,None)
+        elif len(clim)==2:
+            c=(None,None)
         else:
-            c=clim
+            raise TypeError('not sure what clim you are setting with {}'.format(clim))
 
         h=a.pcolormesh(I.time, I.elevation,
-                       I[:,i,:].values.T,
+                       I.sel(wavelength=l).values.T,
                        cmap='cubehelix_r',norm=LogNorm(),
                        vmin=c[0],vmax=c[1])
 
@@ -55,7 +62,7 @@ def spectrasubplot(wl,I,fg,ax,elfid,indlbl=False,clim=None):
         for f in elfid:
             a.axhline(f,color='gold',alpha=0.8,linestyle='--')
 
-        a.set_title('{:.1f} nm'.format(l/10))
+        a.set_title('{:.1f} nm  '.format(l/10) + chem[l])
 
         a.invert_yaxis()
         a.autoscale(True,tight=True)
@@ -67,7 +74,7 @@ def plotratio(ratio,wl,I, elfid, ratlim,verbose):
     ratio = ratio.T
     fg,ax = subplots(3,1,figsize=(20,12),sharex=True)
 
-    spectrasubplot(wl,I,fg,ax[:2],elfid,True)
+    spectrasubplot(wl,I,fg,ax[:2],elfid,True,[1e3,1e4]) #FIXME make ratlim based
 
     hi = ax[2].pcolormesh(ratio.time,ratio.elevation,
                           ratio.values,

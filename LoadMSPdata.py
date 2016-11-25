@@ -14,15 +14,19 @@ Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat
 2007-03-23
 ./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T10:30Z 2007-03-23T12:00Z  -e 90 115 --elfid 98 107
 
-2011-03-01
+2011-03-01T1000
 ./LoadMSPdata.py ~/data/2011-03-01/msp/MSP_2011060.PF -t 2011-03-01T10:02Z 2011-03-01T10:20Z  -e 75 125 --elfid 82 118 --wl 5577 4278 -r 1 2 3
 ./LoadMSPdata.py ~/data/2011-03-01/msp/MSP_2011060.PF -t 2011-03-01T10:05Z 2011-03-01T10:07Z  -e 75 125 --elfid 82 118 --wl 5577 4278 -r 1 2 3 -v
 
-2013-04-11
+2013-04-11T1030
 ./LoadMSPdata.py ~/data/2013-04-11/msp/PKR_SMSP_STD_20130411.NC -t 2013-04-11T10:30:00Z 2013-04-11T11:30:00Z  -e 90 115 --elfid 98 107
-
-2013-04-14
-./LoadMSPdata.py ~/data/2013-04-14/msp/PKR_SMSP_STD_20130414.NC -t 2013-04-14T08:00:00Z 2013-04-14T09:30:00Z  -e 85 120 --elfid 98 107
+#
+2013-04-14T0854
+./LoadMSPdata.py ~/data/2013-04-14/msp/PKR_SMSP_STD_20130414.NC -t 2013-04-14T08:51:00Z 2013-04-14T08:58:00Z  -e 85 120 --elfid 98 107 -v
+2013-04-14T0826
+./LoadMSPdata.py ~/data/2013-04-14/msp/PKR_SMSP_STD_20130414.NC -t 2013-04-14T08:25:00Z 2013-04-14T08:27:00Z  -e 85 120 --elfid 98 107 -v
+-r   1 2 3 is a starting point for 5577/4278 ratio
+-r 0.5 1 3 is a starting point for 6300/4278 ratio
 """
 
 if __name__ == '__main__':
