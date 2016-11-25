@@ -12,10 +12,11 @@ Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat
     FROM NORTH of 95-110 degrees corresponding to symmetric about 77.5 elevation angle
 
 2007-03-23
-./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T10:30 2007-03-23T12:00Z  -e 90 115 --elfid 98 107
+./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T10:30Z 2007-03-23T12:00Z  -e 90 115 --elfid 98 107
 
 2011-03-01
-./LoadMSPdata.py ~/data/2011-03-01/msp/MSP_2011060.PF -t 2011-03-01T10:02 2011-03-01T10:20Z  -e 75 125 --elfid 82 118 --wl 5577 4278 -v
+./LoadMSPdata.py ~/data/2011-03-01/msp/MSP_2011060.PF -t 2011-03-01T10:02Z 2011-03-01T10:20Z  -e 75 125 --elfid 82 118 --wl 5577 4278 -r 1 2 3
+./LoadMSPdata.py ~/data/2011-03-01/msp/MSP_2011060.PF -t 2011-03-01T10:05Z 2011-03-01T10:07Z  -e 75 125 --elfid 82 118 --wl 5577 4278 -r 1 2 3 -v
 
 2013-04-11
 ./LoadMSPdata.py ~/data/2013-04-11/msp/PKR_SMSP_STD_20130411.NC -t 2013-04-11T10:30:00Z 2013-04-11T11:30:00Z  -e 90 115 --elfid 98 107
