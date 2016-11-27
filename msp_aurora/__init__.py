@@ -58,7 +58,9 @@ def readmsp(fn, tlim, elim):
         for i in range(wavelen[goodwl].size):
             if (Ipeak[:,i,:]==0).all():
                 goodwl[i] = False
-        # astype(float) is critical to avoid overflow!
+        """
+        astype(float) is critical to avoid overflow of int16 dtype!
+        """
         Ipeak = f['PeakIntensity'][tind,goodwl,elind].astype(float)
 #%% filter factor per wavelength Rayleigh/PMT * 128
         filtfact = f['FilterFactor'][goodwl]

@@ -11,7 +11,7 @@ sns.set_style('ticks')
 Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat we use elevation angles
     FROM NORTH of 95-110 degrees corresponding to symmetric about 77.5 elevation angle
 
-2007-03-23
+2007-03-23T1120
 ./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T10:30Z 2007-03-23T12:00Z  -e 90 115 --elfid 98 107
 
 2011-03-01T1000
