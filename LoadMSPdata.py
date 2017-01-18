@@ -4,7 +4,7 @@ from matplotlib.pyplot import show
 from msp_aurora import readmsp,lineratio
 from msp_aurora.plots import plotmspspectra,plotratio
 import seaborn as sns
-sns.set_context('talk',font_scale=1.5)
+sns.set_context('talk',font_scale=1.75)
 sns.set_style('ticks')
 
 """
@@ -12,7 +12,9 @@ Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat
     FROM NORTH of 95-110 degrees corresponding to symmetric about 77.5 elevation angle
 
 2007-03-23T1120
-./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T10:30Z 2007-03-23T12:00Z  -e 90 115 --elfid 98 107
+./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T10:30Z 2007-03-23T12:00Z  -e 85 120 --elfid 98 107 -v
+./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T11:17Z 2007-03-23T11:28Z  -e 85 120 --elfid 98 107 -r 0.2 1 2 -v
+./LoadMSPdata.py ~/data/2007-03-23/msp/MSP_2007082.PF -t 2007-03-23T11:17Z 2007-03-23T11:28Z  -e 85 120 --elfid 98 107 --wl 5577 4278 -r 0.7 1 3 -v
 
 2011-03-01T1000
 ./LoadMSPdata.py ~/data/2011-03-01/msp/MSP_2011060.PF -t 2011-03-01T10:02Z 2011-03-01T10:20Z  -e 75 125 --elfid 82 118 --wl 5577 4278 -r 1 2 3

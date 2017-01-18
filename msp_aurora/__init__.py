@@ -1,11 +1,5 @@
-try:
-    from pathlib import Path
-    Path().expanduser()
-except (AttributeError,ImportError):
-    from pathlib2 import Path
-#%%
+from pathlib import Path
 import logging
-from six import string_types
 from netCDF4 import Dataset
 from xarray import DataArray
 from numpy import arange,array
@@ -33,7 +27,7 @@ def readmsp(fn, tlim, elim):
         # convert to datetimes -- need as ndarray for next line
         t = array([d0 + timedelta(seconds=int(s)) for s in secdayutc])
         if tlim is not None and len(tlim)==2:
-            if isinstance(tlim[0],string_types):
+            if isinstance(tlim[0], str):
                 tlim = [parse(t) for t in tlim]
             tind = (tlim[0] <= t) & (t <= tlim[1])
         else:
