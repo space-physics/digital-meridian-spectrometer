@@ -1,0 +1,7 @@
+nose
+netCDF4
+xarray
+numpy
+matplotlib
+python-dateutil
+pytz
