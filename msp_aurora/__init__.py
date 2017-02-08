@@ -6,7 +6,7 @@ from numpy import arange,array
 from datetime import datetime,timedelta
 from dateutil.parser import parse
 #
-from histutils.fortrandates import yd2datetime,forceutc
+from sciencedates import yd2datetime,forceutc
 
 def readmsp(fn, tlim, elim):
     """

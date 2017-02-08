@@ -11,10 +11,14 @@ except Exception as e:
 
 
 setup(name='msp_aurora',
-      install_requires=['histutils','isrutils'],
-      dependency_links = [
-        'https://github.com/scienceopen/histutils/tarball/master#egg=histutils',
-        'https://github.com/scienceopen/isrutils/tarball/master#egg=isrutils',],
       packages=['msp_aurora'],
+      author='Michael Hirsch, Ph.D.',
+      url='https://github.com/scienceopen/meridian-spectrometer-reader',
+      version='0.5',
+      install_requires=['sciencedates',
+                        'isrutils'],
+      dependency_links = [
+        'https://github.com/scienceopen/isrutils/tarball/master#egg=isrutils',],
+
 	  )
 
