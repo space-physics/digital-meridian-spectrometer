@@ -12,7 +12,7 @@ setup(name='msp_aurora',
       version='0.5',
       install_requires=req,
       dependency_links = [
-        'https://github.com/scienceopen/isrutils/tarball/master#egg=isrutils',],
+        'https://github.com/scienceopen/isrutils/tarball/master#egg=isrutils-999.0.0',],
 
 	  )
 
