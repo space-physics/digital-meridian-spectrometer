@@ -2,7 +2,6 @@
 from setuptools import setup
 
 req = ['sciencedates',
-       'isrutils',
        'nose','netCDF4','xarray','numpy','matplotlib','python-dateutil','pytz']
 
 setup(name='msp_aurora',
@@ -11,8 +10,5 @@ setup(name='msp_aurora',
       url='https://github.com/scienceopen/meridian-spectrometer-reader',
       version='0.5',
       install_requires=req,
-      dependency_links = [
-        'https://github.com/scienceopen/isrutils/tarball/master#egg=isrutils-999.0.0',],
-
 	  )
 

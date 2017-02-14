@@ -3,11 +3,10 @@ from pytz import UTC
 import numpy as np
 from matplotlib.pyplot import subplots
 from matplotlib.colors import LogNorm
-from matplotlib.dates import DateFormatter
 from matplotlib.ticker import LogFormatterMathtext#,ScalarFormatter
 import matplotlib.colors as colors
 #
-from isrutils.plots import timeticks
+from sciencedates import tickfix
 
 sfmt = LogFormatterMathtext()
 #    sfmt = ScalarFormatter()
@@ -126,17 +125,6 @@ def plotratio(ratio,wl,I, elfid, ratlim,verbose):
         fg.suptitle(datetime.fromtimestamp(I.time[0].item()/1e9, tz=UTC).strftime('%Y-%m-%d') +
                 '  Meridian Scanning Photometer: {} / {} Intensity Ratio'.format(wl[0],wl[1]))
 
-
-
-def tickfix(t,fg,ax):
-    majtick,mintick = timeticks(t[-1] - t[0])
-    if majtick:
-        ax.xaxis.set_major_locator(majtick)
-    if mintick:
-        ax.xaxis.set_minor_locator(mintick)
-    ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
-    fg.autofmt_xdate()
-    ax.set_xlabel('UTC')
 
 class MidpointNormalize(colors.Normalize):
     """
