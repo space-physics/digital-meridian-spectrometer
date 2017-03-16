@@ -7,7 +7,7 @@ req = ['sciencedates',
 setup(name='msp_aurora',
       packages=['msp_aurora'],
       author='Michael Hirsch, Ph.D.',
-      url='https://github.com/scienceopen/meridian-spectrometer-reader',
+      url='https://github.com/scivision/meridian-spectrometer-reader',
       version='0.5',
       install_requires=req,
 	  )
