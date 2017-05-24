@@ -1,7 +1,7 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.167565.svg
    :target: https://doi.org/10.5281/zenodo.167565
-.. image:: https://travis-ci.org/scienceopen/meridian-spectrometer-reader.svg?branch=master
-    :target: https://travis-ci.org/scienceopen/meridian-spectrometer-reader
+.. image:: https://travis-ci.org/scivision/meridian-spectrometer-reader.svg?branch=master
+    :target: https://travis-ci.org/scivision/meridian-spectrometer-reader
 
 ============================
 meridian-spectrometer-reader
