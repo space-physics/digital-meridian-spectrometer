@@ -1,0 +1,6 @@
+[build-system]
+requires = ["setuptools", "wheel",
+'netCDF4','xarray','numpy','python-dateutil','pytz',
+'sciencedates',
+'matplotlib',
+ "nose"] 

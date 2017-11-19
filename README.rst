@@ -1,7 +1,15 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.167565.svg
    :target: https://doi.org/10.5281/zenodo.167565
+
 .. image:: https://travis-ci.org/scivision/meridian-spectrometer-reader.svg?branch=master
     :target: https://travis-ci.org/scivision/meridian-spectrometer-reader
+
+.. image:: https://coveralls.io/repos/github/scivision/meridian-spectrometer-reader/badge.svg?branch=master
+    :target: https://coveralls.io/github/scivision/meridian-spectrometer-reader?branch=master
+
+.. image:: https://api.codeclimate.com/v1/badges/41995381a6cd84d46cb7/maintainability
+   :target: https://codeclimate.com/github/scivision/meridian-spectrometer-reader/maintainability
+   :alt: Maintainability
 
 ============================
 meridian-spectrometer-reader
@@ -24,7 +32,7 @@ install
 =======
 ::
 
-    python setup.py develop
+    pip install -e .
 
 examples
 ========
@@ -34,15 +42,15 @@ Notes
 =====
 You can also graphically browse the files with the ``ncview`` program::
 
-    apt-get install ncview
+    apt install ncview
 
 Error: libnetcdf.so.7
 =====================
-if you get::
+if you get
 
     ImportError: libnetcdf.so.7: cannot open shared object file: No such file or directory
 
 try::
 
-    sudo apt install libnetcdf-dev
+    apt install libnetcdf-dev
     pip install --upgrade netcdf4
