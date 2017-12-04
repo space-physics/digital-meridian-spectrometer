@@ -6,7 +6,7 @@ from matplotlib.colors import LogNorm
 from matplotlib.ticker import LogFormatterMathtext#,ScalarFormatter
 import matplotlib.colors as colors
 #
-from sciencedates import tickfix
+from sciencedates.ticks import tickfix
 
 sfmt = LogFormatterMathtext()
 #    sfmt = ScalarFormatter()
@@ -71,6 +71,7 @@ def spectrasubplot(wl,I,fg,ax,elfid,indlbl=False,clim=None):
 
         a.invert_yaxis()
         a.autoscale(True,tight=True)
+
 
 def plotratio(ratio,wl,I, elfid, ratlim,verbose):
     if ratio is None:
