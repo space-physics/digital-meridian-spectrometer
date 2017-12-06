@@ -32,7 +32,7 @@ install
 =======
 ::
 
-    pip install -e .
+    python -m pip install -e .
 
 examples
 ========
@@ -53,4 +53,4 @@ if you get
 try::
 
     apt install libnetcdf-dev
-    pip install --upgrade netcdf4
+    python -m pip install --upgrade netcdf4
