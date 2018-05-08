@@ -10,6 +10,7 @@ setup(name='msp_aurora',
       author='Michael Hirsch, Ph.D.',
       url='https://github.com/scivision/meridian-spectrometer-reader',
       description="Load and plot UAF Geophysical Institute Digital Meridian Spectrometer data",
+      long_description=open('README.rst').read(),
       version='0.5.2',
       classifiers=[
       'Development Status :: 4 - Beta',
