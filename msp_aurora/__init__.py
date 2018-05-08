@@ -8,7 +8,7 @@ from dateutil.parser import parse
 #
 from sciencedates import yd2datetime,forceutc
 
-def readmsp(fn, tlim, elim):
+def readmsp(fn:Path, tlim:tuple=None, elim:tuple=None) -> DataArray:
     """
     This function works with 1983-2010 netCDF3 as well as 2011-present netCDF4 files.
     """
@@ -21,7 +21,7 @@ def readmsp(fn, tlim, elim):
         d0 = yd2datetime(fn.stem[4:])
 
 
-    with Dataset(str(fn),'r') as f:
+    with Dataset(fn,'r') as f:
 #%% load by time
         secdayutc = f['Time'][:]
         # convert to datetimes -- need as ndarray for next line
@@ -68,7 +68,8 @@ def readmsp(fn, tlim, elim):
 
     return R
 
-def lineratio(R,wl):
+
+def lineratio(R:DataArray, wl:tuple) -> float:
     """
     R: brightness in Rayleighs vs. time, wavelength, elevation
     wl: wavelengths to ratio
@@ -76,5 +77,5 @@ def lineratio(R,wl):
     try:
         return R.sel(wavelength=wl[0]) / R.sel(wavelength=wl[1])
     except KeyError as e:
-        logging.error('wavelength {} not available. skipping ratio'.format(e))
+        logging.error(f'wavelength {e} not available. skipping ratio')
         return

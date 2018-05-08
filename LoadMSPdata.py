@@ -3,9 +3,12 @@ from matplotlib.pyplot import show
 #
 from msp_aurora import readmsp,lineratio
 from msp_aurora.plots import plotmspspectra,plotratio
-import seaborn as sns
-sns.set_context('talk',font_scale=1.75)
-sns.set_style('ticks')
+try:
+    import seaborn as sns
+    sns.set_context('talk',font_scale=1.25)
+    sns.set_style('ticks')
+except ImportError:
+    pass
 
 """
 Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat we use elevation angles
