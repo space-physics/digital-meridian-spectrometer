@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 from matplotlib.pyplot import show
-#
-from msp_aurora import readmsp,lineratio
-from msp_aurora.plots import plotmspspectra,plotratio
+from argparse import ArgumentParser
+from msp_aurora import readmsp, lineratio
+from msp_aurora.plots import plotmspspectra, plotratio
 try:
     import seaborn as sns
-    sns.set_context('talk',font_scale=1.25)
+    sns.set_context('talk', font_scale=1.25)
     sns.set_style('ticks')
 except ImportError:
     pass
@@ -34,22 +34,26 @@ Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat
 -r 0.5 1 3 is a starting point for 6300/4278 ratio
 """
 
-if __name__ == '__main__':
-    from argparse import ArgumentParser
+
+def main():
     p = ArgumentParser(description='reading Poker Flat Research Range Meridian Scanning Photometer')
-    p.add_argument('ncfn',help='netCDF data file name to read')
-    p.add_argument('-t','--tlim',help='time window to zoom plot in on',nargs=2)
-    p.add_argument('-e','--elim',help='elevation limits to plot FROM NORTH HORIZON',nargs=2,type=float)
-    p.add_argument('-r','--ratlim',help='min,mid,max of ratio plot colormap',nargs=3,type=float,default=[0.5,1,3])
-    p.add_argument('--wl',help='wavelengths to ratio [A]',nargs=2,default=[6300,4278],type=int)
-    p.add_argument('--elfid',help='elevation angles at which to place fiducials (for other camera)',type=float,nargs=2,default=[])
-    p.add_argument('-v','--verbose',action='store_true')
+    p.add_argument('ncfn', help='netCDF data file name to read')
+    p.add_argument('-t', '--tlim', help='time window to zoom plot in on', nargs=2)
+    p.add_argument('-e', '--elim', help='elevation limits to plot FROM NORTH HORIZON', nargs=2, type=float)
+    p.add_argument('-r', '--ratlim', help='min,mid,max of ratio plot colormap', nargs=3, type=float, default=[0.5, 1, 3])
+    p.add_argument('--wl', help='wavelengths to ratio [A]', nargs=2, default=[6300, 4278], type=int)
+    p.add_argument('--elfid', help='elevation angles at which to place fiducials (for other camera)', type=float, nargs=2, default=[])
+    p.add_argument('-v', '--verbose', action='store_true')
     p = p.parse_args()
 
     Intensity = readmsp(p.ncfn, p.tlim, p.elim)
     plotmspspectra(Intensity, p.elfid)
-#%%
-    ratio = lineratio(Intensity,p.wl)
-    plotratio(ratio,p.wl, Intensity, p.elfid, p.ratlim, p.verbose)
+# %%
+    ratio = lineratio(Intensity, p.wl)
+    plotratio(ratio, p.wl, Intensity, p.elfid, p.ratlim, p.verbose)
 
     show()
+
+
+if __name__ == '__main__':
+    main()
