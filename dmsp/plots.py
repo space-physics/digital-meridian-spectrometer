@@ -1,10 +1,11 @@
 from datetime import datetime
-from pytz import UTC
 import numpy as np
-from matplotlib.pyplot import subplots
+import xarray
+from matplotlib.pyplot import figure
 from matplotlib.colors import LogNorm
 from matplotlib.ticker import LogFormatterMathtext  # ,ScalarFormatter
 import matplotlib.colors as colors
+from typing import Tuple, Sequence, Any
 #
 from sciencedates.ticks import tickfix
 
@@ -19,46 +20,56 @@ sfmt = LogFormatterMathtext()
 #         5577:[4e3,1e5],6300:[1000,20000]}
 
 # hard events like 2007-03-23
-vlims = {4278: [100, 15000], 4861: [50, 1000], 5200: [100, 2000], 6700: [100, 2000],
-         5577: [100, 5e4], 6300: [50, 1000]}
+vlims = {'4278': [100, 15000],
+         '4861': [50, 1000],
+         '5200': [100, 2000],
+         '6700': [100, 2000],
+         '5577': [100, 5e4],
+         '6300': [50, 1000]}
+
+chem = {'4278': r'$N_{2}^{+}$ 1N',
+        '4861': r'H$_\beta$',
+        '5200': '[NI]',
+        '6700': r'N$_2$ 1P',
+        '5577': '[OI]32',
+        '6300': '[OI]21'}
 
 
-chem = {4278: r'$N_{2}^{+}$ 1N', 4861: r'H$_\beta$', 5200: '[NI]', 6700: r'N$_2$ 1P',
-        5577: '[OI]32', 6300: '[OI]21'}
-
-
-def plotmspspectra(I, elfid):
-    wl = I.wavelength.values
+def plotmspspectra(I: xarray.Dataset, elfid):
+    wl = list(I.data_vars.keys())
     # %% plots
-    fg, ax = subplots(wl.size, 1, figsize=(20, 12), sharex=True)
+    fg = figure(figsize=(20, 12))
+    ax = fg.subplots(len(wl), 1, sharex=True)
 
-    spectrasubplot(wl, I, fg, ax, elfid, False, vlims)
+    spectrasubplot(I, fg, ax, elfid, False, vlims)
     tickfix(I.time, fg, fg.gca())
 
     fg.text(0.89, 0.5, 'Rayleighs', ha='center', va='center', rotation='vertical')
     fg.text(0.01, 0.5, 'elevation from North [deg.]', ha='center', va='center', rotation='vertical')
 
-    fg.suptitle(datetime.fromtimestamp(I.time[0].item() / 1e9, tz=UTC).strftime('%Y-%m-%d') +
+    fg.suptitle(datetime.utcfromtimestamp(I.time[0].item() / 1e9).strftime('%Y-%m-%d') +
                 '  Meridian Scanning Photometer: Peak Intensity',
                 y=0.99)
     fg.tight_layout(pad=1.1)
 
 
-def spectrasubplot(wl, I, fg, ax, elfid, indlbl=False, clim=None):
+def spectrasubplot(I: xarray.Dataset, fg, ax,
+                   elfid: Sequence[float], indlbl: bool=False, clim=None):
+    wl = list(I.data_vars.keys())
     assert isinstance(indlbl, bool)
 
     for a, l in zip(ax, wl):
         if clim is None:
-            c = (None, None)
+            c: Any = (None, None)
         elif isinstance(clim, dict) and l in vlims:
             c = vlims[l]
         elif len(clim) == 2:
             c = (None, None)
         else:
-            raise TypeError('not sure what clim you are setting with {}'.format(clim))
+            wl
 
         h = a.pcolormesh(I.time, I.elevation,
-                         I.sel(wavelength=l).values.T,
+                         I[l].values.T,
                          cmap='cubehelix_r', norm=LogNorm(),
                          vmin=c[0], vmax=c[1])
 
@@ -69,20 +80,23 @@ def spectrasubplot(wl, I, fg, ax, elfid, indlbl=False, clim=None):
         for f in elfid:
             a.axhline(f, color='gold', alpha=0.8, linestyle='--')
 
-        a.set_title('{:.1f} nm  '.format(l / 10) + chem[l])
+        a.set_title(f'{float(l) / 10:.1f} nm  ' + chem[l])
 
         a.invert_yaxis()
         a.autoscale(True, tight=True)
 
 
-def plotratio(ratio, wl, I, elfid, ratlim, verbose):
+def plotratio(ratio, wlreq: Tuple[str, str], I: xarray.Dataset,
+              elfid, ratlim, verbose: bool=False):
     if ratio is None:
         return
 
     ratio = ratio.T
-    fg, ax = subplots(3, 1, figsize=(20, 12), sharex=True)
 
-    spectrasubplot(wl, I, fg, ax[:2], elfid, True, [1e3, 1e4])  # FIXME make ratlim based
+    fg = figure(figsize=(20, 12))
+    ax = fg.subplots(3, 1, sharex=True)
+
+    spectrasubplot(I, fg, ax[:2], elfid, True, [1e3, 1e4])  # FIXME make ratlim based
 
     hi = ax[2].pcolormesh(ratio.time, ratio.elevation,
                           ratio.values,
@@ -96,12 +110,12 @@ def plotratio(ratio, wl, I, elfid, ratlim, verbose):
     ax[2].invert_yaxis()
     ax[2].autoscale(True, tight=True)
 
-    fg.colorbar(hi, ax=ax[2]).set_label('{} / {}'.format(wl[0], wl[1]))
+    fg.colorbar(hi, ax=ax[2]).set_label(f'{wlreq[0]} / {wlreq[1]}')
 
     fg.text(0.085, 0.5, 'elevation from North [deg.]', ha='center', va='center', rotation='vertical')
 
-    fg.suptitle(datetime.fromtimestamp(I.time[0].item() / 1e9, tz=UTC).strftime('%Y-%m-%d') +
-                '  Meridian Scanning Photometer: {} / {} Intensity Ratio'.format(wl[0], wl[1]))
+    fg.suptitle(datetime.utcfromtimestamp(I.time[0].item() / 1e9).strftime('%Y-%m-%d') +
+                f'  Meridian Scanning Photometer: {wlreq[0]} / {wlreq[1]} Intensity Ratio')
     # y=0.99)
 
     tickfix(ratio.time, fg, ax[2])
@@ -110,12 +124,14 @@ def plotratio(ratio, wl, I, elfid, ratlim, verbose):
         nsub = ratio.time.size
         ncol = 4
         nrow = nsub // ncol
-        fg, axs = subplots(nrow, ncol, sharey=True, sharex=True)
+
+        fg = figure()
+        axs = fg.subplots(nrow, ncol, sharey=True, sharex=True)
         for i, ax in enumerate(axs.ravel()):
             if i == nsub:
                 break
             ax.plot(ratio[:, i], ratio.elevation)
-            ax.set_title(datetime.fromtimestamp(ratio.time[i].item() / 1e9, tz=UTC).strftime('%H:%M:%S'))
+            ax.set_title(datetime.utcfromtimestamp(ratio.time[i].item() / 1e9).strftime('%H:%M:%S'))
 
             for f in elfid:
                 ax.axhline(f, color='gold', alpha=0.85, linestyle='--')
@@ -123,10 +139,10 @@ def plotratio(ratio, wl, I, elfid, ratlim, verbose):
         ax.invert_yaxis()
 
         fg.text(0.05, 0.5, 'elevation from North [deg.]', ha='center', va='center', rotation='vertical')
-        fg.text(0.5, 0.02, 'Intensity ratio: {} / {}'.format(wl[0], wl[1]), ha='center', va='center')
+        fg.text(0.5, 0.02, f'Intensity ratio: {wlreq[0]} / {wlreq[1]}', ha='center', va='center')
 
-        fg.suptitle(datetime.fromtimestamp(I.time[0].item() / 1e9, tz=UTC).strftime('%Y-%m-%d') +
-                    '  Meridian Scanning Photometer: {} / {} Intensity Ratio'.format(wl[0], wl[1]))
+        fg.suptitle(datetime.utcfromtimestamp(I.time[0].item() / 1e9).strftime('%Y-%m-%d') +
+                    f'  Meridian Scanning Photometer: {wlreq[0]} / {wlreq[1]} Intensity Ratio')
 
 
 class MidpointNormalize(colors.Normalize):
