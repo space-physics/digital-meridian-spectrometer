@@ -6,7 +6,7 @@
 
 ## Digital Meridian Spectrometer
 
-For Geophysical Institute's Poker Flat Digital Meridian Spectrometer, which uses netCDF
+For Geophysical Institute's Poker Flat Digital Meridian Spectrometer, which uses NetCDF
 
 ![example of PF-DMSP data](tests/demo.png)
 
@@ -22,11 +22,26 @@ This library is also usable from Matlab, as seen in `dmsp.m`.
 
 ## Install
 
-    python -m pip install -e .
+```sh
+python -m pip install -e .
+```
 
-## Usage examples
+### Matlab
+Matlab users need:
+* Matlab &ge; R2018b
+* `dmsp` package installed into the [Python environment associated with Matlab](https://www.scivision.co/matlab-python-user-module-import/#switching-python-version)
 
-see top comments in LoadMSPdata.py, with the data obtained from the URL above.
+## Usage
+
+`LoadMSPdata.py` creates many plots.
+
+Use as a Python module is like:
+```python
+import dmsp
+
+dat = dmsp.load('~/data/myfile.PF')
+```
+which returns [xarray.Dataset](http://xarray.pydata.org/en/stable/generated/xarray.Dataset.html)
 
 ## Notes
 
