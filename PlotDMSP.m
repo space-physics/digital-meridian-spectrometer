@@ -12,6 +12,7 @@ for i = 1:Nwl
     set(h, 'edgecolor', 'none')
     title(ax, [wavelength{i}, ' \AA'], 'interpreter', 'latex')
     set(ax, 'ytick', 0:45:180, 'ydir', 'reverse')
+    hc = colorbar('peer', ax);
     
     if i < Nwl
         set(ax, 'xtick', [])
@@ -25,3 +26,4 @@ end
 
 ttxt = char(time(1));
 sgtitle(fg, ttxt(1:11))
+ylabel(hc, 'Rayleighs')
