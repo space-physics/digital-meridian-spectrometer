@@ -18,8 +18,9 @@ This library is also usable from Matlab, as seen in `dmsp.m`.
 ## Data sources
 
 * 2011-present: ftp://optics.gi.alaska.edu/PKR/DMSP/NCDF/
-* [1983-2010 (NetCDF 3 .PF files)](http://optics.gi.alaska.edu/realtime/data/msp/pkr)
+* 1983-2010 (NetCDF 3 .PF files): http://optics.gi.alaska.edu/realtime/data/msp/pkr   This link was good for years and we used this data, but in late 2018 it stopped working.
 * [other dates](http://optics.gi.alaska.edu/realtime/data/archive/PKR_MSP_X/)
+* FTP: ftp://optics.gi.alaska.edu/PKR/DMSP
 
 
 ## Install

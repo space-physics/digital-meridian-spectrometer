@@ -54,7 +54,7 @@ def plotmspspectra(I: xarray.Dataset, elfid):
 
 
 def spectrasubplot(I: xarray.Dataset, fg, ax,
-                   elfid: Sequence[float], indlbl: bool=False, clim=None):
+                   elfid: Sequence[float], indlbl: bool = False, clim=None):
     wl = list(I.data_vars.keys())
     assert isinstance(indlbl, bool)
 
@@ -87,7 +87,7 @@ def spectrasubplot(I: xarray.Dataset, fg, ax,
 
 
 def plotratio(ratio, wlreq: Tuple[str, str], I: xarray.Dataset,
-              elfid, ratlim, verbose: bool=False):
+              elfid, ratlim, verbose: bool = False):
     if ratio is None:
         return
 
