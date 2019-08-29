@@ -1,6 +1,6 @@
 function [dat, time, elev, wavelength] = dmsp(fn)
 %% Load digital meridian scanning photometer from Matlab.
-% https://www.scivision.co/matlab-python-user-module-import/
+% https://www.scivision.dev/matlab-python-user-module-import/
 %
 % fn: DMSP filename to read
 %

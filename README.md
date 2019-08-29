@@ -1,4 +1,5 @@
 [![image](https://zenodo.org/badge/DOI/10.5281/zenodo.167565.svg)](https://doi.org/10.5281/zenodo.167565)
+
 [![image](https://travis-ci.org/scivision/digital-meridian-spectrometer.svg?branch=master)](https://travis-ci.org/scivision/digital-meridian-spectrometer)
 [![Coverage Status](https://coveralls.io/repos/github/scivision/digital-meridian-spectrometer/badge.svg?branch=master)](https://coveralls.io/github/scivision/digital-meridian-spectrometer?branch=master)
 [![Build status](https://ci.appveyor.com/api/projects/status/r7044ijm5pgmawwg?svg=true)](https://ci.appveyor.com/project/scivision/digital-meridian-spectrometer)
@@ -32,7 +33,7 @@ python -m pip install -e .
 ### Matlab
 Matlab users need:
 * Matlab &ge; R2018b
-* `dmsp` package installed into the [Python environment associated with Matlab](https://www.scivision.co/matlab-python-user-module-import/#switching-python-version)
+* `dmsp` package installed into the [Python environment associated with Matlab](https://www.scivision.dev/matlab-python-user-module-import/#switching-python-version)
 
 ## Usage
 
