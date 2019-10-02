@@ -1,8 +1,8 @@
 [![image](https://zenodo.org/badge/DOI/10.5281/zenodo.167565.svg)](https://doi.org/10.5281/zenodo.167565)
 
-[![image](https://travis-ci.org/scivision/digital-meridian-spectrometer.svg?branch=master)](https://travis-ci.org/scivision/digital-meridian-spectrometer)
-[![Coverage Status](https://coveralls.io/repos/github/scivision/digital-meridian-spectrometer/badge.svg?branch=master)](https://coveralls.io/github/scivision/digital-meridian-spectrometer?branch=master)
-[![Build status](https://ci.appveyor.com/api/projects/status/r7044ijm5pgmawwg?svg=true)](https://ci.appveyor.com/project/scivision/digital-meridian-spectrometer)
+[![Actions Status](https://github.com/space-physics/digital-meridian-spectrometer/workflows/ci/badge.svg)](https://github.com/space-physics/digital-meridian-spectrometer/actions)
+
+
 [![PyPi version](https://img.shields.io/pypi/pyversions/dmsp.svg)](https://pypi.python.org/pypi/dmsp)
 [![PyPi Download stats](http://pepy.tech/badge/dmsp)](http://pepy.tech/project/dmsp)
 
