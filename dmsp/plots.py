@@ -7,8 +7,7 @@ from matplotlib.ticker import LogFormatterMathtext  # ,ScalarFormatter
 import matplotlib.colors as colors
 from typing import Tuple, Sequence, Any
 
-#
-from sciencedates.ticks import tickfix
+from .ticks import tickfix
 
 sfmt = LogFormatterMathtext()
 #    sfmt = ScalarFormatter()
@@ -40,14 +39,14 @@ chem = {
 }
 
 
-def plotmspspectra(I: xarray.Dataset, elfid):
-    wl = list(I.data_vars.keys())
+def plotmspspectra(dat: xarray.Dataset, elfid):
+    wl = list(dat.data_vars.keys())
     # %% plots
     fg = figure(figsize=(20, 12))
     ax = fg.subplots(len(wl), 1, sharex=True)
 
-    spectrasubplot(I, fg, ax, elfid, False, vlims)
-    tickfix(I.time, fg, fg.gca())
+    spectrasubplot(dat, fg, ax, elfid, False, vlims)
+    tickfix(dat.time, fg, fg.gca())
 
     fg.text(0.89, 0.5, "Rayleighs", ha="center", va="center", rotation="vertical")
     fg.text(
@@ -55,7 +54,7 @@ def plotmspspectra(I: xarray.Dataset, elfid):
     )
 
     fg.suptitle(
-        datetime.utcfromtimestamp(I.time[0].item() / 1e9).strftime("%Y-%m-%d")
+        datetime.utcfromtimestamp(dat.time[0].item() / 1e9).strftime("%Y-%m-%d")
         + "  Meridian Scanning Photometer: Peak Intensity",
         y=0.99,
     )
@@ -63,9 +62,9 @@ def plotmspspectra(I: xarray.Dataset, elfid):
 
 
 def spectrasubplot(
-    I: xarray.Dataset, fg, ax, elfid: Sequence[float], indlbl: bool = False, clim=None
+    dat: xarray.Dataset, fg, ax, elfid: Sequence[float], indlbl: bool = False, clim=None
 ):
-    wl = list(I.data_vars.keys())
+    wl = list(dat.data_vars.keys())
     assert isinstance(indlbl, bool)
 
     for a, l in zip(ax, wl):
@@ -79,9 +78,9 @@ def spectrasubplot(
             wl
 
         h = a.pcolormesh(
-            I.time,
-            I.elevation,
-            I[l].values.T,
+            dat.time,
+            dat.elevation,
+            dat[l].values.T,
             cmap="cubehelix_r",
             norm=LogNorm(),
             vmin=c[0],
@@ -102,7 +101,7 @@ def spectrasubplot(
 
 
 def plotratio(
-    ratio, wlreq: Tuple[str, str], I: xarray.Dataset, elfid, ratlim, verbose: bool = False
+    ratio, wlreq: Tuple[str, str], dat: xarray.Dataset, elfid, ratlim, verbose: bool = False
 ):
     if ratio is None:
         return
@@ -112,7 +111,7 @@ def plotratio(
     fg = figure(figsize=(20, 12))
     ax = fg.subplots(3, 1, sharex=True)
 
-    spectrasubplot(I, fg, ax[:2], elfid, True, [1e3, 1e4])  # FIXME make ratlim based
+    spectrasubplot(dat, fg, ax[:2], elfid, True, [1e3, 1e4])  # FIXME make ratlim based
 
     hi = ax[2].pcolormesh(
         ratio.time,
@@ -137,7 +136,7 @@ def plotratio(
     )
 
     fg.suptitle(
-        datetime.utcfromtimestamp(I.time[0].item() / 1e9).strftime("%Y-%m-%d")
+        datetime.utcfromtimestamp(dat.time[0].item() / 1e9).strftime("%Y-%m-%d")
         + f"  Meridian Scanning Photometer: {wlreq[0]} / {wlreq[1]} Intensity Ratio"
     )
     # y=0.99)
@@ -170,7 +169,7 @@ def plotratio(
         fg.text(0.5, 0.02, f"Intensity ratio: {wlreq[0]} / {wlreq[1]}", ha="center", va="center")
 
         fg.suptitle(
-            datetime.utcfromtimestamp(I.time[0].item() / 1e9).strftime("%Y-%m-%d")
+            datetime.utcfromtimestamp(dat.time[0].item() / 1e9).strftime("%Y-%m-%d")
             + f"  Meridian Scanning Photometer: {wlreq[0]} / {wlreq[1]} Intensity Ratio"
         )
 

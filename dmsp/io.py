@@ -5,7 +5,6 @@ import xarray
 import numpy as np
 from datetime import datetime, timedelta
 from dateutil.parser import parse
-import sciencedates as sd
 
 
 def load(
@@ -20,7 +19,9 @@ def load(
     if ext == ".nc":
         d0 = datetime.strptime(fn.stem[13:21], "%Y%m%d")
     elif ext == ".pf":
-        d0 = sd.yeardoy2datetime(int(fn.stem[4:]))
+        year = int(fn.stem[4:8])
+        days = int(fn.stem[8:11])
+        d0 = datetime(year, 1, 1) + timedelta(days=days - 1)
 
     with Dataset(fn, "r") as f:
         # %% load by time

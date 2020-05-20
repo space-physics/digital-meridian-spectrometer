@@ -1,6 +1,7 @@
 # Digital Meridian Spectrometer
 
 [![image](https://zenodo.org/badge/DOI/10.5281/zenodo.167565.svg)](https://doi.org/10.5281/zenodo.167565)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/space-physics/digital-meridian-spectrometer.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/space-physics/digital-meridian-spectrometer/context:python)
 ![ci](https://github.com/space-physics/digital-meridian-spectrometer/workflows/ci/badge.svg)
 [![PyPi version](https://img.shields.io/pypi/pyversions/dmsp.svg)](https://pypi.python.org/pypi/dmsp)
 [![PyPi Download stats](http://pepy.tech/badge/dmsp)](http://pepy.tech/project/dmsp)
