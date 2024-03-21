@@ -6,11 +6,11 @@ function [dat, time, elev, wavelength] = dmsp(fn)
 %
 % example:
 % [dat, time, elev, wavelength] = dmsp('~/data/2011-03-01/msp/MSP_2011060.PF');
-
+arguments
+  fn (1,1) string {mustBeFile}
+end
 
 assert(~verLessThan('matlab', '9.5'), 'Matlab >= R2018b required')
-
-validateattributes(fn, {'char'}, {'scalartext'})
 
 I = py.dmsp.load(fn);
 
