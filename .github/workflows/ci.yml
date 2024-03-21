@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     paths:
-    - "*.py"
+    - "**.py"
     - ".github/workflows/ci.yml"
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python: ["3.8", "3.11"]
+        python: ["3.8", "3.12"]
 
     runs-on: ${{ matrix.os }}
 
