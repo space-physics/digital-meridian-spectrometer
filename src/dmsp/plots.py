@@ -84,9 +84,7 @@ def spectrasubplot(
             dat.elevation,
             dat[l].values.T,
             cmap="cubehelix_r",
-            norm=LogNorm(),
-            vmin=c[0],
-            vmax=c[1],
+            norm=LogNorm(vmin=c[0], vmax=c[1]),
         )
 
         hc = fg.colorbar(h, ax=a, format=sfmt)
@@ -120,9 +118,7 @@ def plotratio(
         ratio.elevation,
         ratio.values,
         cmap="bwr",
-        norm=MidpointNormalize(midpoint=ratlim[1]),
-        vmin=ratlim[0],
-        vmax=ratlim[2],
+        norm=MidpointNormalize(midpoint=ratlim[1], vmin=ratlim[0], vmax=ratlim[2]),
     )
 
     for f in elfid:
