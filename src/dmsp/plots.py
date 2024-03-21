@@ -1,4 +1,6 @@
 from datetime import datetime
+import typing
+
 import numpy as np
 import xarray
 from matplotlib.pyplot import figure
@@ -109,7 +111,7 @@ def plotratio(
     ratio = ratio.T
 
     fg = figure(figsize=(20, 12))
-    ax = fg.subplots(3, 1, sharex=True)
+    ax: typing.Any = fg.subplots(3, 1, sharex=True)
 
     spectrasubplot(dat, fg, ax[:2], elfid, True, [1e3, 1e4])  # FIXME make ratlim based
 
@@ -149,7 +151,8 @@ def plotratio(
         nrow = nsub // ncol
 
         fg = figure()
-        axs = fg.subplots(nrow, ncol, sharey=True, sharex=True)
+        axs: typing.Any = fg.subplots(nrow, ncol, sharey=True, sharex=True)
+
         for i, ax in enumerate(axs.ravel()):
             if i == nsub:
                 break

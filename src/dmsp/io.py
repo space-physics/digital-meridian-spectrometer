@@ -1,5 +1,7 @@
+from __future__ import annotations
 from pathlib import Path
-from typing import Tuple
+import typing
+
 from netCDF4 import Dataset
 import xarray
 import numpy as np
@@ -8,7 +10,9 @@ from dateutil.parser import parse
 
 
 def load(
-    fn: Path, tlim: Tuple[datetime, datetime] = None, elevlim: Tuple[float, float] = None
+    fn: Path,
+    tlim: tuple[datetime, datetime] | None = None,
+    elevlim: tuple[float, float] | None = None,
 ) -> xarray.Dataset:
     """
     This function works with 1983-2010 netCDF3 as well as 2011-present netCDF4 files.
@@ -28,6 +32,8 @@ def load(
         secdayutc = f["Time"][:]
         # convert to datetimes -- need as ndarray for next line
         t = np.array([d0 + timedelta(seconds=int(s)) for s in secdayutc])
+
+        tind: typing.Any
         if tlim is not None and len(tlim) == 2:
             if isinstance(tlim[0], str):
                 tlim = [parse(t) for t in tlim]
@@ -39,6 +45,7 @@ def load(
         elevation is not stored anywhere in the data files...
         """
         elv = np.arange(181.0)
+        elind: typing.Any
         if elevlim is not None and len(elevlim) == 2:
             elind = (elevlim[0] <= elv) & (elv <= elevlim[1])
         else:

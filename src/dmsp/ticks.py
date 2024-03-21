@@ -1,12 +1,15 @@
 """These functions separated due to time-consuming imports"""
+
 from datetime import timedelta
+
 import numpy as np
 import xarray
+
 from matplotlib.dates import DateFormatter
 from matplotlib.dates import MinuteLocator, SecondLocator
 
 
-def tickfix(t, fg, ax, tfmt: str = "%H:%M:%S"):
+def tickfix(t, fg, ax, tfmt: str = "%H:%M:%S") -> None:
     majtick, mintick = timeticks(t[-1] - t[0])
     if majtick:
         ax.xaxis.set_major_locator(majtick)

@@ -4,14 +4,6 @@ from argparse import ArgumentParser
 import dmsp
 import dmsp.plots as dmp
 
-try:
-    import seaborn as sns
-
-    sns.set_context("talk", font_scale=1.25)
-    sns.set_style("ticks")
-except ImportError:
-    pass
-
 """
 Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat we use elevation angles
     FROM NORTH of 95-110 degrees corresponding to symmetric about 77.5 elevation angle
@@ -36,44 +28,36 @@ Note: elevation from North Horizon, so to get near magnetic zenith at Poker Flat
 -r 0.5 1 3 is a starting point for 6300/4278 ratio
 """
 
+p = ArgumentParser(description="reading Poker Flat Research Range Meridian Scanning Photometer")
+p.add_argument("ncfn", help="netCDF data file name to read")
+p.add_argument("-t", "--tlim", help="time window to zoom plot in on", nargs=2)
+p.add_argument(
+    "-e", "--elim", help="elevation limits to plot FROM NORTH HORIZON", nargs=2, type=float
+)
+p.add_argument(
+    "-r",
+    "--ratlim",
+    help="min,mid,max of ratio plot colormap",
+    nargs=3,
+    type=float,
+    default=[0.5, 1, 3],
+)
+p.add_argument("--wl", help="wavelengths to ratio [A]", nargs=2)
+p.add_argument(
+    "--elfid",
+    help="elevation angles at which to place fiducials (for other camera)",
+    type=float,
+    nargs=2,
+    default=[],
+)
+p.add_argument("-v", "--verbose", action="store_true")
+a = p.parse_args()
 
-def main():
-    p = ArgumentParser(
-        description="reading Poker Flat Research Range Meridian Scanning Photometer"
-    )
-    p.add_argument("ncfn", help="netCDF data file name to read")
-    p.add_argument("-t", "--tlim", help="time window to zoom plot in on", nargs=2)
-    p.add_argument(
-        "-e", "--elim", help="elevation limits to plot FROM NORTH HORIZON", nargs=2, type=float
-    )
-    p.add_argument(
-        "-r",
-        "--ratlim",
-        help="min,mid,max of ratio plot colormap",
-        nargs=3,
-        type=float,
-        default=[0.5, 1, 3],
-    )
-    p.add_argument("--wl", help="wavelengths to ratio [A]", nargs=2)
-    p.add_argument(
-        "--elfid",
-        help="elevation angles at which to place fiducials (for other camera)",
-        type=float,
-        nargs=2,
-        default=[],
-    )
-    p.add_argument("-v", "--verbose", action="store_true")
-    p = p.parse_args()
+Intensity = dmsp.load(a.ncfn, a.tlim, a.elim)
+dmp.plotmspspectra(Intensity, a.elfid)
+# %% ratios
+if a.wl:
+    ratio = Intensity[a.wl[0]] / Intensity[a.wl[1]]
+    dmp.plotratio(ratio, a.wl, Intensity, a.elfid, a.ratlim, a.verbose)
 
-    Intensity = dmsp.load(p.ncfn, p.tlim, p.elim)
-    dmp.plotmspspectra(Intensity, p.elfid)
-    # %% ratios
-    if p.wl:
-        ratio = Intensity[p.wl[0]] / Intensity[p.wl[1]]
-        dmp.plotratio(ratio, p.wl, Intensity, p.elfid, p.ratlim, p.verbose)
-
-    show()
-
-
-if __name__ == "__main__":
-    main()
+show()
