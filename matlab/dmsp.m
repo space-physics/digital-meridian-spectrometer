@@ -10,42 +10,38 @@ arguments
   fn (1,1) string {mustBeFile}
 end
 
-assert(~verLessThan('matlab', '9.5'), 'Matlab >= R2018b required')
-
 I = py.dmsp.load(fn);
 
 time = datetime2datetime(I{'time'});
 elev = double(I{'elevation'}.values);
-wavelength = cellfun(@char, cell(py.list(I.data_vars.keys())), 'uniformoutput', false);
+wavelength = string(py.list(I.data_vars.keys()));
 
 dat = nan(length(time), length(elev), length(wavelength));
 
 for i = 1:length(wavelength)
-    dat(:, :, i) = xarray2mat(I, char(wavelength{i})); %#ok<AGROW,*NASGU>
+    dat(:, :, i) = xarray2mat(I, char(wavelength{i}));
 end
 
 end
 
 
 function M = xarray2mat(V, key)
+arguments
+  V
+  key string = string.empty
+end
+
 if nargin < 2  % xarray.DataArray
   M = double(py.numpy.asfortranarray(V));
 else % xarray.Dataset
   M = double(py.numpy.asfortranarray(V{key}));
 end
+
 end
 
 
 function dt = datetime2datetime(t0)
 
-t0 = t0.values.tolist();
-
-dt = NaT(length(t0), 1);
-
-for i = 1:length(t0)
-    t = cellfun(@double, cell(t0{i}.utctimetuple()));
-    dt(i) = datetime(t(1), t(2), t(3), t(4), t(5), t(6));
-end
-
+dt = datetime(t0.values.astype("datetime64[ms]").tolist());
 
 end
